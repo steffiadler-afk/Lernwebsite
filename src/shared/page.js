@@ -1,0 +1,1 @@
+import {mountThemeControls} from './theme.js';export function initPage(){mountThemeControls()}

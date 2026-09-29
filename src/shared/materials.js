@@ -1,0 +1,2 @@
+import {CONFIG} from './config.js';
+export async function listMaterials(target='#materials',scope='all'){const host=document.querySelector(target);if(!host)return;if(!CONFIG.remote.enabled){host.innerHTML='<p class="muted">Materialien werden sichtbar, sobald das Backend aktiviert ist.</p>';return}const r=await fetch(CONFIG.remote.url+'/api/materials?scope='+encodeURIComponent(scope));const items=await r.json();host.innerHTML=items.map(x=>`<a class="card" href="${CONFIG.remote.url}/api/materials/${x.id}">${x.name}</a>`).join('')}
