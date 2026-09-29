@@ -1,10 +1,10 @@
 export const CONFIG = {
   siteName: "Steffis Lernwerkstatt",
   remote: {
-    enabled: false,
-    url: "https://YOUR-WORKER.workers.dev",
-    submitToken: "CHANGE_ME_TO_MATCH_WORKER"
-  },
+  enabled: true,
+  url: "https://learning-worker.steffi-adler.workers.dev",
+  submitToken: "Easyx6"
+},
   realms: {
     "english-5": "eng5",
     "english-6": "eng6",
