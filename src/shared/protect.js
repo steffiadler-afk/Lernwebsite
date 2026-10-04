@@ -1,5 +1,6 @@
 import {CONFIG} from './config.js';
 export function protect(realm){
+ if(realm==='english-6') return;
  const key='unlocked:'+realm;if(localStorage.getItem(key)==='1') return;
  const expected=CONFIG.realms[realm]; if(!expected) return;
  const ov=document.createElement('div');ov.className='protect-overlay';
