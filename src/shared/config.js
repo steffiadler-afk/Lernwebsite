@@ -3,7 +3,7 @@ export const CONFIG = {
   remote: {
   enabled: true,
   url: "https://learning-worker.steffi-adler.workers.dev",
-  submitToken: "Easyx6"
+  submitToken: "Easyx6!"
 },
   realms: {
     "english-5": "eng5",
