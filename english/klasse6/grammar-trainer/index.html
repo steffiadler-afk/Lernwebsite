@@ -7,6 +7,16 @@
 <link rel="stylesheet" href="../../../src/shared/styles.css">
 <style>
 .quiz-wrap{max-width:860px;margin:auto}.quiz-intro{margin:1rem 0 1.5rem}.quiz-section{margin:1.5rem 0;padding:1.15rem;border:1px solid #cbd5e1;border-radius:14px;background:var(--surface,#fff)}.quiz-section h2{margin:0 0 .3rem;font-size:1.35rem;color:#205b91}.quiz-help{margin:0 0 1.1rem;color:var(--muted,#526070)}.question{padding:1rem 0;border-top:1px solid #dfe4ea}.question:first-of-type{border-top:0}.question-label{font-weight:650;margin:0 0 .75rem;font-size:1.05rem;line-height:1.5}.choices{display:flex;flex-wrap:wrap;gap:.65rem}.choice{background:#f8fafc;color:#172b45;border:2px solid #bdc8d5;border-radius:10px;padding:.6rem .95rem;min-height:44px;font:inherit;font-weight:600;cursor:pointer}.choice:hover:not(:disabled),.choice:focus-visible{border-color:#2867a0;outline:2px solid transparent}.choice:disabled{cursor:default;opacity:1}.choice.correct{border-color:#287345;background:#e4f5e8;color:#17482b}.choice.incorrect{border-color:#b54747;background:#ffeceb;color:#8c2929}.feedback{min-height:1.4em;margin:.55rem 0 0;font-weight:600}.feedback.ok{color:#176036}.feedback.no{color:#ad3333}.progress-panel{padding:1rem;border:1px solid #cbd5e1;border-radius:12px;margin:1.3rem 0}.progress-panel strong{font-size:1.1rem}#restart{margin-top:.75rem;cursor:pointer} .question-label .blank{border-bottom:2px solid currentColor;padding:0 .3rem} @media print{.choice{padding:.25rem}.quiz-section{break-inside:avoid}}
+[data-mode="dark"] .quiz-section{background:var(--card);border-color:var(--border);color:var(--text)}
+[data-mode="dark"] .quiz-section h2{color:#a9d5ff}
+[data-mode="dark"] .question{border-top-color:var(--border)}
+[data-mode="dark"] .question-label,[data-mode="dark"] .quiz-help,[data-mode="dark"] .progress-panel{color:var(--text)}
+[data-mode="dark"] .progress-panel{background:var(--card);border-color:var(--border)}
+[data-mode="dark"] .choice{background:#304457;color:#f6f8fa;border-color:#72879a}
+[data-mode="dark"] .choice.correct{background:#184a35;color:#dbffe6;border-color:#69d39d}
+[data-mode="dark"] .choice.incorrect{background:#622c34;color:#fff0f0;border-color:#ff9ca6}
+[data-mode="dark"] .feedback.ok{color:#93efb1}
+[data-mode="dark"] .feedback.no{color:#ffb6ba}
 </style>
 </head>
 <body>
