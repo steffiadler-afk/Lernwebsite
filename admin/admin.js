@@ -56,7 +56,8 @@ async function load(name){
   tab.innerHTML='<p class="muted">Wird geladen …</p>';
   try{
     if(name==='overview')return renderOverview(await ensureSubmissions());
-    if(name==='students')return renderStudents(await ensureSubmissions());
+    if(name==='students')return renderStudents((await ensureSubmissions()).filter(x=>x.type!=='login'));
+    if(name==='logins')return renderLogins(await ensureSubmissions());
     if(name==='stats')return renderStats(await ensureSubmissions());
     if(name==='timeline')return renderTimeline(await ensureSubmissions());
     if(name==='visibility')return renderSimple('Sichtbarkeit',await api('/api/admin/visibility'));
@@ -88,6 +89,12 @@ function renderOverview(arr){
   document.querySelector('#refreshAdmin').onclick=()=>load('overview');
 }
 
+function renderLogins(arr){
+ const entries=arr.filter(x=>x.type==='login'&&x.className==='6g').sort((a,b)=>new Date(b.timestamp||0)-new Date(a.timestamp||0));
+ const unique=new Set(entries.map(x=>(x.name||'').trim().toLowerCase())).size;
+ tab.innerHTML='<div class="admin-head"><div><h2>Anmeldungen 6g – Test 1 A–F</h2><p class="muted">'+entries.length+' Anmeldungen von '+unique+' verschiedenen Namen. Mehrfachanmeldungen erscheinen mehrfach.</p></div><button id="refreshLogins">↻ Aktualisieren</button></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Name</th><th>Anmeldezeit</th></tr></thead><tbody>'+entries.map(x=>'<tr><td>'+safe(x.name||'–')+'</td><td>'+safe(dateFmt(x.timestamp))+'</td></tr>').join('')+'</tbody></table></div>'+(entries.length?'':'<p class="muted">Bisher keine Anmeldungen erfasst.</p>');
+ document.getElementById('refreshLogins').onclick=()=>load('logins');
+}
 function renderStudents(arr){
   const classes=[...new Set(arr.map(classLabel))].sort();
   const exercises=[...new Set(arr.map(exerciseLabel))].sort();
