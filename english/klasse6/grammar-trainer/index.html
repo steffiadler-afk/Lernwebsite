@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grammar Trainer – Klasse 6 | Steffis Lernwerkstatt</title>
+<link rel="stylesheet" href="../../../src/shared/styles.css">
+<style>
+.quiz-wrap{max-width:860px;margin:auto}.quiz-intro{margin:1rem 0 1.5rem}.quiz-section{margin:1.5rem 0;padding:1.15rem;border:1px solid #cbd5e1;border-radius:14px;background:var(--surface,#fff)}.quiz-section h2{margin:0 0 .3rem;font-size:1.35rem;color:#205b91}.quiz-help{margin:0 0 1.1rem;color:var(--muted,#526070)}.question{padding:1rem 0;border-top:1px solid #dfe4ea}.question:first-of-type{border-top:0}.question-label{font-weight:650;margin:0 0 .75rem;font-size:1.05rem;line-height:1.5}.choices{display:flex;flex-wrap:wrap;gap:.65rem}.choice{background:#f8fafc;color:#172b45;border:2px solid #bdc8d5;border-radius:10px;padding:.6rem .95rem;min-height:44px;font:inherit;font-weight:600;cursor:pointer}.choice:hover:not(:disabled),.choice:focus-visible{border-color:#2867a0;outline:2px solid transparent}.choice:disabled{cursor:default;opacity:1}.choice.correct{border-color:#287345;background:#e4f5e8;color:#17482b}.choice.incorrect{border-color:#b54747;background:#ffeceb;color:#8c2929}.feedback{min-height:1.4em;margin:.55rem 0 0;font-weight:600}.feedback.ok{color:#176036}.feedback.no{color:#ad3333}.progress-panel{padding:1rem;border:1px solid #cbd5e1;border-radius:12px;margin:1.3rem 0}.progress-panel strong{font-size:1.1rem}#restart{margin-top:.75rem;cursor:pointer} .question-label .blank{border-bottom:2px solid currentColor;padding:0 .3rem} @media print{.choice{padding:.25rem}.quiz-section{break-inside:avoid}}
+</style>
+</head>
+<body>
+<main class="wrap quiz-wrap">
+<div class="topbar"><div><div class="brand">🇬🇧 Grammar Trainer · Klasse 6</div><div class="muted">Simple Present · Simple Past · Progressive</div></div><div id="themeControls" class="controls"></div></div>
+<p><a href="../index.html">← Zurück zu Klasse 6</a></p>
+<h1>Choose the correct answer!</h1>
+<p class="quiz-intro">Lies den Satz und klicke die richtige Verbform an. Du hast immer <strong>drei Möglichkeiten</strong>. Du bekommst sofort eine Rückmeldung und kannst die richtige Lösung sehen.</p>
+<div class="progress-panel" role="status" aria-live="polite"><strong id="progress">0 von 25 beantwortet · 0 richtig</strong><div id="endMessage" class="muted"></div><button class="choice" id="restart" type="button">Noch einmal üben</button></div>
+<div id="sections"></div>
+<p><a href="../index.html">← Zurück zu Klasse 6</a></p>
+</main>
+<script type="module">
+import {initPage} from '../../../src/shared/page.js';
+initPage();
+const groups=[
+{title:'1. Simple Present',help:'Choose the correct Simple Present form.',items:[
+['My brother ___ football every Saturday.','plays',['play','plays','is playing']],
+['Sheila ___ tomatoes.','doesn’t like',['don’t like','doesn’t like','isn’t like']],
+['___ you have a pet?','Do',['Does','Are','Do']],
+['We ___ in a small town.','live',['lives','live','are live']],
+['My teacher ___ English and Music.','teaches',['teach','teachs','teaches']]
+]},
+{title:'2. Simple Past',help:'Choose the correct Simple Past form.',items:[
+['Last week we ___ a castle.','visited',['visit','visited','visiting']],
+['I ___ TV yesterday.','didn’t watch',['don’t watch','didn’t watched','didn’t watch']],
+['___ you see the film last night?','Did',['Do','Were','Did']],
+['My dad ___ dinner yesterday.','cooked',['cooks','cooked','cook']],
+['We ___ a great time on holiday.','had',['have','haved','had']]
+]},
+{title:'3. Simple Present or Simple Past?',help:'Watch the time expressions and choose the tense.',items:[
+['My family ___ to Italy every summer.','goes',['went','goes','is going']],
+['Last year we ___ in a nice hotel.','stayed',['stay','stays','stayed']],
+['My mum ___ in a school.','works',['worked','works','working']],
+['I ___ the food there last year.','didn’t like',['don’t like','didn’t liked','didn’t like']],
+['___ you travel to another country last week?','Did',['Did','Do','Does']]
+]},
+{title:'4. Simple Present or Present Progressive?',help:'Decide: a habit or something happening now?',items:[
+['Mia ___ a book at the moment.','is reading',['reads','is reading','read']],
+['My brother ___ computer games now.','isn’t playing',['doesn’t play','isn’t playing','aren’t playing']],
+['___ you doing your homework right now?','Are',['Do','Is','Are']],
+['We ___ to school by bus every day.','go',['are going','go','goes']],
+['Look! The dog ___ in the garden.','is running',['runs','running','is running']]
+]},
+{title:'5. Past Progressive',help:'Choose the correct Past Progressive form.',items:[
+['Yesterday at 5 pm I ___ my homework.','was doing',['did','were doing','was doing']],
+['While my mum was cooking, I ___ in the kitchen.','was helping',['helped','was helping','were helping']],
+['We ___ TV when the phone rang.','weren’t watching',['didn’t watch','wasn’t watching','weren’t watching']],
+['___ you playing football at 4 pm?','Were',['Did','Were','Was']],
+['My parents ___ when I came home.','weren’t sleeping',['wasn’t sleeping','weren’t sleeping','didn’t sleep']]
+]}
+];
+const host=document.getElementById('sections');
+let answered=0,correct=0;
+function update(){document.getElementById('progress').textContent=answered+' von 25 beantwortet · '+correct+' richtig';document.getElementById('endMessage').textContent=answered===25?'Fertig! Du hast '+correct+' von 25 Fragen beim ersten Versuch richtig beantwortet.':'Du kannst bei jeder Frage sofort sehen, was richtig ist.'}
+function render(){
+ answered=0;correct=0;host.replaceChildren();
+ groups.forEach((group,gi)=>{
+ const sec=document.createElement('section');sec.className='quiz-section';
+ const title=document.createElement('h2');title.textContent=group.title;sec.append(title);
+ const desc=document.createElement('p');desc.className='quiz-help';desc.textContent=group.help;sec.append(desc);
+ group.items.forEach(([sentence,answer,choices],qi)=>{
+ const article=document.createElement('div');article.className='question';
+ const q=document.createElement('p');q.className='question-label';q.textContent=(qi+1)+'. '+sentence;article.append(q);
+ const bar=document.createElement('div');bar.className='choices';bar.setAttribute('role','group');bar.setAttribute('aria-label','Antworten zu Frage '+(qi+1));article.append(bar);
+ const note=document.createElement('p');note.className='feedback';note.setAttribute('aria-live','polite');article.append(note);
+ choices.forEach(option=>{
+ const btn=document.createElement('button');btn.type='button';btn.className='choice';btn.textContent=option;
+ btn.addEventListener('click',()=>{
+ if(article.dataset.done)return;
+ article.dataset.done='yes';answered++;
+ const ok=option===answer;if(ok)correct++;
+ bar.querySelectorAll('button').forEach(b=>{b.disabled=true;if(b.textContent===answer)b.classList.add('correct');if(b===btn&&!ok)b.classList.add('incorrect')});
+ note.className='feedback '+(ok?'ok':'no');note.textContent=ok?'✓ Richtig!':'✗ Nicht ganz. Richtig ist: '+answer+'.';
+ update();
+ });bar.append(btn);
+ });
+ sec.append(article);
+ });host.append(sec);
+ });update();
+}
+document.getElementById('restart').addEventListener('click',render);
+render();
+</script>
+</body>
+</html>
