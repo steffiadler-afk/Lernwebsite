@@ -25,12 +25,13 @@
 <p><a href="../index.html">← Zurück zu Klasse 6</a></p>
 <h1>Choose the correct answer!</h1>
 <p class="quiz-intro">Lies den Satz und klicke die richtige Verbform an. Du hast immer <strong>drei Möglichkeiten</strong>. Du bekommst sofort eine Rückmeldung und kannst die richtige Lösung sehen.</p>
-<div class="progress-panel" role="status" aria-live="polite"><strong id="progress">0 von 25 beantwortet · 0 richtig</strong><div id="endMessage" class="muted"></div><button class="choice" id="restart" type="button">Noch einmal üben</button></div>
+<p><label for="resultName">Dein Name für Frau Adler (Vorname und erster Buchstabe des Nachnamens)</label> <input id="resultName" maxlength="50" placeholder="z. B. Georg B" autocomplete="name"></p><div class="progress-panel" role="status" aria-live="polite"><strong id="progress">0 von 25 beantwortet · 0 richtig</strong><div id="endMessage" class="muted"></div><p id="sendStatus" role="status" aria-live="polite"></p><button class="choice" id="sendResult" type="button" hidden>Ergebnis an Frau Adler senden</button><button class="choice" id="restart" type="button">Noch einmal üben</button></div>
 <div id="sections"></div>
 <p><a href="../index.html">← Zurück zu Klasse 6</a></p>
 </main>
 <script type="module">
 import {initPage} from '../../../src/shared/page.js';
+import {CONFIG} from '../../../src/shared/config.js';
 initPage();
 const groups=[
 {title:'1. Simple Present',help:'Choose the correct Simple Present form.',items:[
@@ -71,9 +72,14 @@ const groups=[
 ];
 const host=document.getElementById('sections');
 let answered=0,correct=0;
+const nameInput=document.getElementById('resultName'),sendStatus=document.getElementById('sendStatus'),sendButton=document.getElementById('sendResult');
+nameInput.value=sessionStorage.getItem('test1_6g_name')||localStorage.getItem('studentName')||'';
+let sending=false,sent=false;
+async function sendResult(){if(sending||sent||answered!==25)return;const name=nameInput.value.trim();if(name.length<3){sendStatus.textContent='Bitte gib oben deinen Namen ein und sende dein Ergebnis.';nameInput.focus();return}sending=true;sendButton.disabled=true;sendStatus.textContent='Ergebnis wird an Frau Adler gesendet …';try{const response=await fetch(CONFIG.remote.url+'/api/submissions',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({token:CONFIG.remote.submitToken,name,className:'6g',subject:'Englisch',exercise:'Grammar Trainer · Tenses',score:correct,total:25,timestamp:new Date().toISOString()})});if(!response.ok)throw new Error('Übertragung fehlgeschlagen');sent=true;sendStatus.textContent='Dein Ergebnis wurde an Frau Adler gesendet.';sendButton.hidden=true}catch(e){sendStatus.textContent='Das Ergebnis konnte nicht gesendet werden. Bitte versuche es erneut und lasse die Seite geöffnet.';sendButton.hidden=false}finally{sending=false;sendButton.disabled=false}}
+sendButton.onclick=sendResult;
 function update(){document.getElementById('progress').textContent=answered+' von 25 beantwortet · '+correct+' richtig';document.getElementById('endMessage').textContent=answered===25?'Fertig! Du hast '+correct+' von 25 Fragen beim ersten Versuch richtig beantwortet.':'Du kannst bei jeder Frage sofort sehen, was richtig ist.'}
 function render(){
- answered=0;correct=0;host.replaceChildren();
+ answered=0;correct=0;sent=false;sendStatus.textContent='';sendButton.hidden=true;host.replaceChildren();
  groups.forEach((group,gi)=>{
  const sec=document.createElement('section');sec.className='quiz-section';
  const title=document.createElement('h2');title.textContent=group.title;sec.append(title);
@@ -92,6 +98,7 @@ function render(){
  bar.querySelectorAll('button').forEach(b=>{b.disabled=true;if(b.textContent===answer)b.classList.add('correct');if(b===btn&&!ok)b.classList.add('incorrect')});
  note.className='feedback '+(ok?'ok':'no');note.textContent=ok?'✓ Richtig!':'✗ Nicht ganz. Richtig ist: '+answer+'.';
  update();
+ if(answered===25){sendButton.hidden=false;if(nameInput.value.trim().length>=3)sendResult();else sendStatus.textContent='Bitte gib oben deinen Namen ein und sende dein Ergebnis.'}
  });bar.append(btn);
  });
  sec.append(article);
