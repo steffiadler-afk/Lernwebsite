@@ -1,5 +1,6 @@
 import {CONFIG} from '../src/shared/config.js';
 import {initPage} from '../src/shared/page.js';
+import {TOTAL, UNITS, isAfResult, practiceGrade, studentCode} from '../english/klasse6/irregular-verbs/af_results.js';
 initPage();
 
 const login=document.querySelector('#login');
@@ -8,7 +9,7 @@ const msg=document.querySelector('#loginMsg');
 const tab=document.querySelector('#tab');
 let token=localStorage.getItem('adminToken')||'';
 let exp=Number(localStorage.getItem('adminTokenExp')||0);
-let submissions=[];
+let loadRevision=0;
 
 if(token&&Date.now()<exp)show();
 
@@ -46,24 +47,35 @@ async function api(path){
 }
 
 async function ensureSubmissions(){
-  submissions=await api('/api/admin/students');
+  const submissions=await api('/api/admin/students');
   submissions.sort((a,b)=>new Date(b.timestamp||0)-new Date(a.timestamp||0));
   return submissions;
 }
 
 async function load(name){
+  const revision=++loadRevision;
   if(!CONFIG.remote.enabled){tab.innerHTML='<p>Backend deaktiviert.</p>';return}
   tab.innerHTML='<p class="muted">Wird geladen …</p>';
+  const views={
+    overview:renderOverview,
+    students:arr=>renderStudents(arr.filter(x=>x.type!=='login')),
+    irregular:renderIrregular,
+    logins:renderLogins,
+    stats:renderStats,
+    timeline:renderTimeline
+  };
+  const labels={visibility:'Sichtbarkeit',materials:'Materialien',images:'Bilder'};
   try{
-    if(name==='overview')return renderOverview(await ensureSubmissions());
-    if(name==='students')return renderStudents((await ensureSubmissions()).filter(x=>x.type!=='login'));
-    if(name==='logins')return renderLogins(await ensureSubmissions());
-    if(name==='stats')return renderStats(await ensureSubmissions());
-    if(name==='timeline')return renderTimeline(await ensureSubmissions());
-    if(name==='visibility')return renderSimple('Sichtbarkeit',await api('/api/admin/visibility'));
-    if(name==='materials')return renderSimple('Materialien',await api('/api/admin/materials'));
-    if(name==='images')return renderSimple('Bilder',await api('/api/admin/images'));
-  }catch(e){tab.innerHTML='<p class="bad">Fehler beim Laden.</p>'}
+    if(views[name]){
+      const records=await ensureSubmissions();
+      if(revision===loadRevision)views[name](records);
+    }else if(labels[name]){
+      const data=await api('/api/admin/'+name);
+      if(revision===loadRevision)renderSimple(labels[name],data);
+    }
+  }catch(e){
+    if(revision===loadRevision)tab.innerHTML='<p class="bad">Fehler beim Laden.</p>';
+  }
 }
 
 function pct(s,t){return t>0?Math.round((s/t)*100):0}
@@ -95,6 +107,34 @@ function renderLogins(arr){
  tab.innerHTML='<div class="admin-head"><div><h2>Anmeldungen 6g – Test 1 A–F</h2><p class="muted">'+entries.length+' Anmeldungen von '+unique+' verschiedenen Namen. Mehrfachanmeldungen erscheinen mehrfach.</p></div><button id="refreshLogins">↻ Aktualisieren</button></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Name</th><th>Anmeldezeit</th></tr></thead><tbody>'+entries.map(x=>'<tr><td>'+safe(x.name||'–')+'</td><td>'+safe(dateFmt(x.timestamp))+'</td></tr>').join('')+'</tbody></table></div>'+(entries.length?'':'<p class="muted">Bisher keine Anmeldungen erfasst.</p>');
  document.getElementById('refreshLogins').onclick=()=>load('logins');
 }
+function renderIrregular(arr){
+  const students=new Map();
+  // ensureSubmissions sorts by time, so the first result per student and unit is the latest.
+  for(const result of arr){
+    if(!isAfResult(result))continue;
+    const code=studentCode(result.name);
+    const key=code.toLocaleLowerCase('de');
+    if(!students.has(key))students.set(key,{code,units:new Map()});
+    const {units}=students.get(key);
+    if(!units.has(result.unit))units.set(result.unit,result.score);
+  }
+  const rows=[...students.values()].sort((a,b)=>a.code.localeCompare(b.code,'de'));
+  const head='<div class="admin-head"><div><h2>Irregular Verbs · 6g</h2><p class="muted">Pro Kürzel und Einheit steht hier das zuletzt abgegebene Ergebnis. Alle Versuche findest du unter „Abgaben“. Ein Strich bedeutet, dass noch keine Abgabe vorliegt.</p></div><button id="refreshIrregular">↻ Aktualisieren</button></div>';
+  const columns=UNITS.map(unit=>`<th scope="col">${unit}</th>`).join('');
+  const body=rows.map(({code,units})=>{
+    const scores=UNITS.map(unit=>{
+      if(!units.has(unit))return '<td>–</td>';
+      const score=units.get(unit);
+      return `<td><strong>${score}/${TOTAL}</strong><br><span class="small muted">Note ${practiceGrade(score)}</span></td>`;
+    }).join('');
+    return `<tr><th scope="row">${safe(code)}</th><td>${units.size} von ${UNITS.length}</td>${scores}</tr>`;
+  }).join('');
+  tab.innerHTML=head+(rows.length
+    ? `<div class="admin-table-wrap" tabindex="0" role="region" aria-label="Ergebnisse nach Kürzel und Einheit"><table class="admin-table" style="min-width:620px"><thead><tr><th scope="col">Kürzel</th><th scope="col">Abgeschlossen</th>${columns}</tr></thead><tbody>${body}</tbody></table></div>`
+    : '<p class="muted">Es wurden noch keine Ergebnisse für die Einheiten A–F abgegeben.</p>');
+  document.getElementById('refreshIrregular').onclick=()=>load('irregular');
+}
+
 function renderStudents(arr){
   const classes=[...new Set(arr.map(classLabel))].sort();
   const exercises=[...new Set(arr.map(exerciseLabel))].sort();
@@ -124,7 +164,7 @@ function submissionRows(arr,details=true){
     const cls=p>=80?'score-good':p>=50?'score-mid':'score-low';
     return `<details class="submission-card" ${details&&i===0?'open':''}><summary>
       <div><strong>${safe(s.name||'Anonym')}</strong><span>${safe(classLabel(s))} · ${safe(exerciseLabel(s))}</span></div>
-      <div class="submission-meta"><span class="score-pill ${cls}">${s.score??0}/${s.total??0} · ${p}%</span><time>${safe(dateFmt(s.timestamp))}</time></div>
+      <div class="submission-meta"><span class="score-pill ${cls}">${safe(s.score??0)}/${safe(s.total??0)} · ${p}%${isAfResult(s)?' · Note '+practiceGrade(s.score):''}</span><time>${safe(dateFmt(s.timestamp))}</time></div>
     </summary>
     <div class="submission-detail">
       <div class="detail-grid"><div><b>Fach</b><span>${safe(subjectLabel(s))}</span></div><div><b>Klasse</b><span>${safe(classLabel(s))}</span></div><div><b>Übung</b><span>${safe(exerciseLabel(s))}</span></div><div><b>Zeit</b><span>${safe(dateFmt(s.timestamp))}</span></div></div>
