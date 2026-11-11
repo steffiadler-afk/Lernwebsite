@@ -82,6 +82,10 @@
 .unit-mode-link{margin-block-start:auto;font-size:.87rem;font-weight:800;color:var(--text)}
 .unit-mode-step{font-size:.76rem;line-height:1.28;color:var(--practice-muted);font-weight:750}
 .unit-mode--quiz{background:var(--practice-tint);border-color:var(--accent)}
+.unit-mode--quiz-feature{min-block-size:0;margin-block-start:1rem}
+.unit-mode--quiz-feature h2{font-size:1.2rem;line-height:1.25;margin:0}
+.unit-modes--writing{grid-template-columns:repeat(2,minmax(0,1fr))}
+.unit-modes--writing .unit-mode{min-block-size:9.5rem}
 .unit-wordbank{
   background:var(--practice-tint);border:1px solid var(--practice-line);border-radius:1.1rem;
   padding:clamp(.85rem,3vw,1.35rem);margin:1rem 0
@@ -133,6 +137,7 @@
 .practice-option:hover,.practice-option.is-selected{background:var(--practice-tint);border-color:var(--accent)}
 .practice-option.is-selected{box-shadow:inset 0 0 0 1px var(--accent)}
 .practice-option:focus-within{outline:3px solid var(--accent);outline-offset:2px}
+.practice-hint{margin:0 0 .75rem;color:var(--practice-muted);font-size:.94rem}
 .practice-field label{display:block;margin:0 0 .32rem;font-size:.9rem}
 .practice-field input{min-height:48px}
 .practice-toolbar,.practice-result-actions,.practice-confirm-actions{
@@ -160,5 +165,5 @@
 .practice-mistakes li p{font-size:.91rem}
 @media(min-width:42rem){.practice-choices{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:47rem){.unit-modes{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:32rem){.unit-modes{grid-template-columns:minmax(0,1fr)}.unit-mode{min-block-size:0}.practice-toolbar{justify-content:flex-start}}
+@media(max-width:32rem){.unit-modes{grid-template-columns:minmax(0,1fr)}:is(.unit-mode,.unit-modes--writing .unit-mode){min-block-size:0}.practice-toolbar{justify-content:flex-start}}
 @media(prefers-reduced-motion:reduce){.unit-mode{transition:none;transform:none!important}}

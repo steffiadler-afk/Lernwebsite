@@ -84,6 +84,13 @@ export function mountPracticeRound({buildRound, submitMeta}) {
     group.setAttribute('aria-labelledby', title.id);
     group.setAttribute('aria-describedby', instruction.id);
     group.append(instruction, title);
+    if (task.hint) {
+      const hint = element('p', 'practice-hint', task.hint);
+      hint.id = 'practiceHint';
+      if (task.hintLang) hint.lang = task.hintLang;
+      group.setAttribute('aria-describedby', instruction.id + ' ' + hint.id);
+      group.append(hint);
+    }
 
     if (task.type === 'choice') {
       const options = element('div', 'practice-choices');
@@ -200,11 +207,14 @@ export function mountPracticeRound({buildRound, submitMeta}) {
       const answer = element('strong', '', task.answer);
       if (task.answerLang) answer.lang = task.answerLang;
       expected.append(document.createTextNode('Richtig: '), answer);
-      item.append(heading, entered, expected);
+      if (task.promptLang) heading.lang = task.promptLang;
+      item.append(heading);
+      if (task.hint) item.append(element('p', '', task.hint));
+      item.append(entered, expected);
       list.append(item);
     }
     result.dataset.details = JSON.stringify(mistakes.map(({task,given}) => ({
-      question: task.instruction + ' ' + task.prompt, given, answer: task.answer, correct: false
+      question: task.instruction + ' ' + task.prompt + (task.hint ? ' (' + task.hint + ')' : ''), given, answer: task.answer, correct: false
     })));
     get('redoMissed').hidden = !mistakes.length;
     if (submitMeta && !redo) {

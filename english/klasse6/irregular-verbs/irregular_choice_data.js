@@ -1,0 +1,87 @@
+import {shuffle} from '../../../src/shared/practice_round.js';
+import {irregularVerbs} from './irregular_verbs_data.js';
+
+// Plausible mix-ups for the given verb: wrong vowels, -ed forms and other tenses.
+export const pastDistractors = {
+  be: ['is / are', 'am / is', 'been'],
+  beat: ['beated', 'beaten', 'beats'],
+  become: ['becamed', 'become', 'becomes'],
+  bite: ['bited', 'bitten', 'bites'],
+  blow: ['blown', 'blewed', 'blows'],
+  break: ['breaked', 'broken', 'breaks'],
+  bring: ['bringed', 'bought', 'brang'],
+  build: ['builded', 'build', 'builds'],
+  burn: ['burnted', 'burt', 'burns'],
+  buy: ['buyed', 'brought', 'buys'],
+  choose: ['choosed', 'chosen', 'chooses'],
+  come: ['comed', 'come', 'comes'],
+  cut: ['cutted', 'cuts', 'cutting'],
+  do: ['doed', 'done', 'does'],
+  draw: ['drawed', 'drawn', 'draws'],
+  drink: ['drinked', 'drunk', 'drinks'],
+  drive: ['drived', 'driven', 'drives'],
+  eat: ['eated', 'eaten', 'eats'],
+  fall: ['falled', 'fallen', 'falls'],
+  feed: ['feeded', 'felt', 'feeds'],
+  feel: ['feeled', 'fed', 'feels'],
+  fight: ['fighted', 'faught', 'fights'],
+  find: ['finded', 'founded', 'finds'],
+  fly: ['flown', 'flewed', 'flies'],
+  forget: ['forgetted', 'forgotten', 'forgets'],
+  get: ['getted', 'gotten', 'gets'],
+  give: ['gived', 'given', 'gives'],
+  go: ['goed', 'wend', 'goes'],
+  grow: ['growed', 'grown', 'grows'],
+  hang: ['hing', 'hang', 'hangs'],
+  have: ['haved', 'has', 'have'],
+  hear: ['heared', 'hear', 'hears'],
+  hit: ['hitted', 'hits', 'hitting'],
+  hold: ['holded', 'holds', 'hold'],
+  hurt: ['hurted', 'hurts', 'hurting'],
+  know: ['knowed', 'known', 'knows'],
+  leave: ['lefted', 'leave', 'leaves'],
+  lend: ['lended', 'landed', 'lends'],
+  let: ['letted', 'lets', 'letting'],
+  lose: ['losed', 'loose', 'loses'],
+  make: ['maked', 'makes', 'make'],
+  mean: ['meaned', 'ment', 'means'],
+  meet: ['meeted', 'meat', 'meets'],
+  pay: ['paied', 'pay', 'pays'],
+  put: ['putted', 'puts', 'putting'],
+  read: ['readed', 'red', 'reads'],
+  ride: ['rided', 'ridden', 'rides'],
+  run: ['runned', 'run', 'runs'],
+  say: ['sayed', 'sayd', 'says'],
+  see: ['seed', 'seen', 'sees'],
+  sell: ['selled', 'told', 'sells'],
+  send: ['sended', 'send', 'sends'],
+  shake: ['shaked', 'shaken', 'shakes'],
+  sing: ['singed', 'sung', 'sings'],
+  sit: ['sitted', 'set', 'sits'],
+  sleep: ['sleeped', 'sleped', 'sleeps'],
+  speak: ['speaked', 'spoken', 'speaks'],
+  spend: ['spended', 'sent', 'spends'],
+  stand: ['standed', 'stoud', 'stands'],
+  swim: ['swimmed', 'swum', 'swims'],
+  take: ['taked', 'taken', 'takes'],
+  teach: ['teached', 'thought', 'teaches'],
+  tell: ['telled', 'sold', 'tells'],
+  think: ['thinked', 'taught', 'thinks'],
+  throw: ['throwed', 'thrown', 'throws'],
+  understand: ['understanded', 'understoud', 'understands'],
+  'wake up': ['wake up', 'woken up', 'wakes up'],
+  wear: ['weared', 'worn', 'wears'],
+  win: ['winned', 'wan', 'wins'],
+  write: ['writed', 'written', 'writes']
+};
+
+export function buildIrregularChoiceRound(startWithGo = false) {
+  const first = startWithGo ? irregularVerbs.find(verb => verb.infinitive === 'go') : null;
+  const others = shuffle(irregularVerbs.filter(verb => verb !== first));
+  const round = first ? [first, ...others.slice(0, 9)] : others.slice(0, 10);
+  return round.map(verb => ({
+    type:'choice', instruction:'Wähle die richtige Simple-Past-Form.',
+    prompt:verb.infinitive, promptLang:'en', answer:verb.past, answerLang:'en',
+    options:shuffle([verb.past, ...pastDistractors[verb.infinitive]])
+  }));
+}

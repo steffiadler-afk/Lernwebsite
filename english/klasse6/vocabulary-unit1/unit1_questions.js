@@ -1,5 +1,6 @@
 import {choiceOptions, shuffle} from '../../../src/shared/practice_round.js';
 import {unit1Phrases, unit1Vocabulary} from './unit1_vocab_data.js';
+import {unit1EnglishClues, unit1GapSentences} from './unit1_writing_data.js';
 
 const categories = {
   Media:'Media · Medien',
@@ -17,30 +18,57 @@ const sortableWords = new Set([
 ]);
 
 const alternatives = {
+  'games console': ['game console'],
+  programme: ['program'],
   'pick sth up': ['pick something up', 'pick up something', 'pick up sth'],
   "What's for homework?": ['What is for homework?']
 };
 
-function normalizeEnglish(text) {
-  return text.normalize('NFKC').toLowerCase().trim()
+function normalizeEnglish(text, allowInfinitive) {
+  const clean = text.normalize('NFKC').toLowerCase().trim()
     .replace(/[‘’]/g, "'")
     .replace(/[‐‑–]/g, '-')
-    .replace(/^(?:\(to\)|to)\s+/, '')
     .replace(/\.{3}|…/g, ' ')
     .replace(/[()]/g, '')
     .replace(/[.,!?;:]+$/, '')
     .replace(/\s+/g, ' ').trim();
+  return allowInfinitive ? clean.replace(/^to\s+/, '') : clean;
+}
+
+const wordByEnglish = new Map(unit1Vocabulary.map(word => [word.en, word]));
+
+function written(entry, {allowInfinitive = true, ...prompt}) {
+  const normalize = value => normalizeEnglish(value, allowInfinitive);
+  const accepted = [
+    entry.en, entry.en.replace(/\s*\([^)]*\)/g, ''), ...(alternatives[entry.en] || [])
+  ].map(normalize);
+  return {
+    type:'text', ...prompt, answer:entry.en, answerLang:'en',
+    accept:value => accepted.includes(normalize(value))
+  };
 }
 
 function translation(entry, phrase = false) {
-  const accepted = [
-    entry.en, entry.en.replace(/\s*\([^)]*\)/g, ''), ...(alternatives[entry.en] || [])
-  ].map(normalizeEnglish);
-  return {
-    type:'text', instruction:phrase ? 'Schreibe die englische Wendung.' : 'Übersetze ins Englische.',
-    prompt:entry.de, promptLang:'de', answer:entry.en, answerLang:'en',
-    accept:value => accepted.includes(normalizeEnglish(value))
-  };
+  return written(entry, {
+    instruction:phrase ? 'Schreibe die englische Wendung.' : 'Übersetze ins Englische.',
+    prompt:entry.de, promptLang:'de'
+  });
+}
+
+function gap(word) {
+  const entry = wordByEnglish.get(word);
+  return written(entry, {
+    instruction:'Schreibe nur das, was in die Lücke gehört.',
+    prompt:unit1GapSentences[word], promptLang:'en',
+    hint:'Deutscher Hinweis: ' + entry.de, hintLang:'de', allowInfinitive:false
+  });
+}
+
+function englishClue(word) {
+  return written(wordByEnglish.get(word), {
+    instruction:'Schreibe die passende Vokabel aus Unit 1.',
+    prompt:unit1EnglishClues[word], promptLang:'en'
+  });
 }
 
 function meaning(entry) {
@@ -73,24 +101,32 @@ function categoryQuestion(entry) {
   };
 }
 
-function phraseChoice(entry) {
-  return {
-    type:'choice', instruction:'Welche englische Wendung passt dazu?', prompt:entry.de, promptLang:'de',
-    answer:entry.en, answerLang:'en', options:choiceOptions(entry.en, unit1Phrases.map(phrase => phrase.en))
-  };
+function takeUnused(entries, count, key, used) {
+  const picked = [];
+  for (const entry of shuffle(entries)) {
+    const word = key(entry);
+    if (used.has(word)) continue;
+    used.add(word);
+    picked.push(entry);
+    if (picked.length === count) break;
+  }
+  return picked;
 }
 
 function mixedQuiz() {
-  const phrases = shuffle(unit1Phrases).slice(0, 4);
-  const used = new Set(phrases.map(phrase => phrase.en));
-  const sort = sortingWords(1, used);
-  sort.forEach(word => used.add(word.en));
-  const words = shuffle(unit1Vocabulary.filter(word => !used.has(word.en))).slice(0, 12);
+  const used = new Set();
+  const phrases = takeUnused(unit1Phrases, 4, phrase => phrase.en, used);
+  const sort = takeUnused(sortingWords(1, used), 2, word => word.en, used);
+  const gaps = takeUnused(Object.keys(unit1GapSentences), 4, word => word, used);
+  const clues = takeUnused(Object.keys(unit1EnglishClues), 2, word => word, used);
+  const words = takeUnused(unit1Vocabulary, 8, word => word.en, used);
   return shuffle([
     ...words.slice(0, 6).map(word => translation(word)),
-    ...words.slice(6, 12).map(meaning),
-    ...sort.map(categoryQuestion),
-    ...phrases.map(phrase => translation(phrase, true))
+    ...gaps.map(gap),
+    ...clues.map(englishClue),
+    ...phrases.map(phrase => translation(phrase, true)),
+    ...words.slice(6).map(meaning),
+    ...sort.map(categoryQuestion)
   ]);
 }
 
@@ -99,11 +135,10 @@ export function buildVocabularyRound(mode) {
     case 'choice': return shuffle(unit1Vocabulary).slice(0, 12).map(meaning);
     case 'match': return matching();
     case 'sort': return shuffle(sortingWords(3)).map(categoryQuestion);
-    case 'translate': return shuffle(unit1Vocabulary).slice(0, 12).map(word => translation(word));
-    case 'phrases': {
-      const phrases = shuffle(unit1Phrases).slice(0, 8);
-      return shuffle([...phrases.slice(0, 4).map(phraseChoice), ...phrases.slice(4).map(phrase => translation(phrase, true))]);
-    }
+    case 'translate': return shuffle(unit1Vocabulary).slice(0, 16).map(word => translation(word));
+    case 'sentences': return shuffle(Object.keys(unit1GapSentences)).slice(0, 12).map(gap);
+    case 'clues': return shuffle(Object.keys(unit1EnglishClues)).slice(0, 12).map(englishClue);
+    case 'phrases': return shuffle(unit1Phrases).map(phrase => translation(phrase, true));
     case 'quiz': return mixedQuiz();
     default: throw new Error('Unbekannte Übungsform: ' + mode);
   }
