@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Notenwerte und Pausenwerte üben, Rhythmen hören und nachklopfen. Die Rhythmuswerkstatt für Musik in Klasse 5.">
+  <title>Rhythmuswerkstatt · Musik Klasse 5</title>
+  <link rel="stylesheet" href="../../../src/shared/styles.css">
+  <link rel="stylesheet" href="rhythm.css">
+</head>
+<body class="rhythm-page">
+<main class="wrap">
+  <header class="topbar">
+    <div><a href="../" class="back-link">← Musik · Klasse 5</a><div class="brand">Steffis Lernwerkstatt</div></div>
+    <div id="themeControls" class="controls"></div>
+  </header>
+  <div id="overview">
+    <header class="workshop-hero">
+      <div><p class="eyebrow">Musik · Klasse 5</p><h1>Rhythmuswerkstatt</h1><p>Wie lange klingt ein Ton? Hör hin, lies mit und klopfe den Rhythmus nach.</p></div>
+      <div id="heroNotation" aria-hidden="true"></div>
+    </header>
+    <section id="rounds" aria-labelledby="roundTitle">
+      <div class="section-title"><h2 id="roundTitle" tabindex="-1">Hören und spielen</h2></div>
+      <div class="mode-grid" id="audioCards"></div>
+      <div class="section-title"><h2>Noten lesen</h2><p>Je 12 Aufgaben</p></div>
+      <div class="mode-grid" id="readingCards"></div>
+    </section>
+    <details id="reference" class="surface reference">
+      <summary>Notenwert-Pyramide und Pausen</summary>
+      <p>Die Viertelnote ist unser Grundschlag. Jede Reihe der Pyramide dauert vier Viertelschläge.</p>
+      <div id="referenceContent"></div>
+      <p>Die ganze Pause hängt an der vierten Linie von unten. Die halbe Pause sitzt auf der dritten. Im 4/4-Takt zählt die ganze Pause vier Schläge.</p>
+      <p>Achtel können durch einen Balken verbunden werden, Sechzehntel durch zwei.</p>
+    </details>
+    <section id="composer" class="surface composer" aria-labelledby="composerTitle">
+      <h2 id="composerTitle">Rhythmus-Baukasten</h2>
+      <p>Wähle einen Takt und tippe auf Noten oder Pausen. Jeder Takt braucht vier Schläge. Verwende mindestens ein Achtelpaar und eine Pause.</p>
+      <div class="bar-tabs" id="barTabs" role="group" aria-label="Takt auswählen"></div>
+      <div id="composition"></div>
+      <div class="palette" id="palette" role="group" aria-label="Note oder Pause hinzufügen"></div>
+      <div class="row"><button type="button" id="undo">Letztes Zeichen entfernen</button><button type="button" id="clear">Takt leeren</button></div>
+      <p id="composeMessage" role="status"></p>
+      <div class="playback">
+        <label for="tempo">Tempo: <output id="tempoValue">72</output> Schläge pro Minute</label>
+        <input id="tempo" type="range" min="50" max="110" value="72">
+        <div class="row"><button type="button" id="playComposition" class="primary">▶ Eigenen Rhythmus hören</button><button type="button" id="stopComposition">Stopp</button></div>
+        <p id="audioStatus" role="status">Fülle vier Takte, um deinen Rhythmus anzuhören.</p>
+      </div>
+      <p class="small muted">Dein Entwurf bleibt auf diesem Gerät gespeichert.</p>
+    </section>
+  </div>
+  <section id="levels" class="surface session" hidden aria-labelledby="levelTitle">
+    <div class="session-header"><h2 id="levelTitle" tabindex="-1"></h2><button type="button" data-home>Zur Auswahl</button></div>
+    <div class="mode-grid" id="levelCards"></div>
+  </section>
+  <section id="exercise" class="surface session" hidden aria-labelledby="exerciseTitle">
+    <div class="session-header"><h2 id="exerciseTitle" tabindex="-1"></h2><button type="button" data-home>Zur Auswahl</button></div>
+    <p id="roundStatus" class="session-progress"></p>
+    <progress id="progress" max="12" value="0" aria-label="Bearbeitete Aufgaben"></progress>
+    <form id="taskForm" class="task-stage">
+      <h3 id="prompt" tabindex="-1"></h3>
+      <div id="visual" class="score-visual" hidden></div>
+      <div id="listenControls" class="listen" hidden>
+        <button type="button" id="listen" class="primary">▶ Hören</button>
+        <button type="button" id="listenStop">Stopp</button>
+        <button type="button" id="tryListen" hidden disabled>▶ Meine Lösung hören</button>
+        <p id="listenStatus" role="status"></p>
+      </div>
+      <div id="answerArea"></div>
+      <div id="feedback" role="status" hidden></div>
+      <div class="row action-row"><button type="submit" class="primary" id="check">Prüfen</button><button type="button" class="primary" id="next" hidden>Weiter →</button></div>
+    </form>
+  </section>
+  <section id="echo" class="surface session" hidden aria-labelledby="echoTitle">
+    <div class="session-header"><h2 id="echoTitle" tabindex="-1">Rhythmus-Echo</h2><button type="button" data-home>Zur Auswahl</button></div>
+    <p id="echoProgress" class="session-progress"></p>
+    <progress id="echoMeter" max="4" value="0" aria-label="Gespielte Aufgaben"></progress>
+    <div class="task-stage">
+      <h3>Hör zu und klopfe den Rhythmus nach.</h3>
+      <div id="echoNotation" class="score-visual"></div>
+      <div id="echoPulse" class="pulse" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+      <p id="echoStatus" class="echo-status" role="status"></p>
+      <button type="button" id="tapPad" class="tap-pad" aria-disabled="true">Auf den Einsatz warten</button>
+      <p class="small muted">Tippe auf die Fläche oder drücke die Leertaste. Bei Pausen lässt du den Schlag aus.</p>
+      <div id="echoTiming" hidden></div>
+      <div class="row action-row"><button type="button" id="echoStart" class="primary">▶ Hören und nachklopfen</button><button type="button" id="echoStop" hidden>Stopp</button><button type="button" id="echoNext" class="primary" hidden>Weiter →</button></div>
+    </div>
+  </section>
+  <section id="result" class="surface session" hidden aria-labelledby="resultTitle">
+    <h2 id="resultTitle" tabindex="-1">Dein Ergebnis</h2>
+    <p class="result-score"><span id="score">0</span> / <span id="total">12</span> Punkte</p>
+    <p id="resultText"></p>
+    <div id="review"></div>
+    <div class="row"><button id="repeat" class="primary" type="button">Neue Runde</button><button id="retry" type="button">Fehler nachüben</button><button type="button" data-home>Andere Übung</button></div>
+  </section>
+  <footer class="footer-note">Steffis Lernwerkstatt · Musik 5 · <a href="NOTO-LICENSE.txt">Notenschrift</a></footer>
+  <noscript>Bitte aktiviere JavaScript, um die Übungen zu nutzen.</noscript>
+</main>
+<script type="module" src="rhythm.js"></script>
+</body>
+</html>
