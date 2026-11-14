@@ -167,7 +167,7 @@ function makeTask(mode, i, level) {
       return {
         prompt: 'Welches Notenbild passt zum gehörten Rhythmus?', seq, audio: true, hideNotation: true,
         input: 'group', answer: seq.join(','), options: options(seq.join(','), PATTERNS.map(pattern => pattern.join(','))),
-        explanation: 'Die leisen Klicks markieren die Viertelschläge. Höre noch einmal und lies die Lösung mit.'
+        explanation: 'Die Claves markieren die Viertelschläge. Höre noch einmal und lies die Lösung mit.'
       };
     }
     case 'rebuild': {

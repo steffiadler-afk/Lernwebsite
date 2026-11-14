@@ -129,7 +129,7 @@ function showQuestion() {
   $('listen').textContent = mode === 'rebuild' ? '▶ Vorlage hören' : '▶ Hören';
   $('tryListen').hidden = mode !== 'rebuild';
   $('tryListen').disabled = true;
-  $('listenStatus').textContent = task.meter ? 'Achte darauf, wann die betonte Eins wiederkommt.' : task.audio && mode !== 'lengths' ? 'Vier Klicks zählen ein.' : '';
+  $('listenStatus').textContent = task.meter ? 'Achte darauf, wann die betonte Eins wiederkommt.' : task.audio && mode !== 'lengths' ? 'Die Claves zählen vier Schläge ein.' : '';
   if (task.options) showChoices(task);
   else showInput(task);
 }
@@ -295,7 +295,7 @@ function resetEcho() {
   pulseStep = -2;
   pulse(-1);
   tapPad('Auf den Einsatz warten', false);
-  $('echoStatus').textContent = 'Höre zuerst zu. Danach zählen vier Klicks für dich ein.';
+  $('echoStatus').textContent = 'Höre zuerst dem Klavier zu. Danach zählen die Claves vier Schläge ein.';
   $('echoStart').hidden = false;
   $('echoStop').hidden = true;
   $('echoTiming').hidden = true;

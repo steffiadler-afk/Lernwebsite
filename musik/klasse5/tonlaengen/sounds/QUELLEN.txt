@@ -1,0 +1,11 @@
+Klavier: „Salamander Grand Piano V3“ von Alexander Holm, CC BY 3.0.
+Original: https://github.com/sfzinstruments/SalamanderGrandPiano
+Quelle für C4.mp3: https://tonejs.github.io/audio/salamander/C4.mp3
+Lizenz: https://creativecommons.org/licenses/by/3.0/
+Bearbeitung: Mono, gekürzt, Ausklang angepasst, Pegel angepasst, als MP3 gespeichert.
+
+Claves: „claves_mp.wav“ von Sam Gossner / Versilian Studios, CC0 1.0.
+Quelle: https://freesound.org/people/sgossner/sounds/375644/
+Projekt: https://github.com/sgossner/VSCO-2-CE
+Lizenz: https://creativecommons.org/publicdomain/zero/1.0/
+Bearbeitung: Mono, gekürzt und im Pegel angepasst.
