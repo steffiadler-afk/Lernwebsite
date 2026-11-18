@@ -1,3 +1,46 @@
+:root {
+  --accent: #2f6f9f;
+  --accent-strong: #245a82;
+  --accent-2: #dcecf8;
+  --card: #fff;
+  --text: #18324a;
+  --border: #d9e4ec;
+  --radius: 22px;
+  --shadow: 0 14px 34px #2648661a;
+  --practice-muted: #52697d;
+  font-family: Inter, system-ui, sans-serif;
+  line-height: 1.55;
+  color: var(--text);
+  background: #f4f8fc;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+
+.wrap {
+  max-width: 1040px;
+  margin-inline: auto;
+  padding: clamp(1rem, 4vw, 2.5rem) clamp(.85rem, 3vw, 1.5rem);
+}
+
+button {
+  border: 1px solid var(--accent);
+  border-radius: 14px;
+  padding: .6rem .85rem;
+  font: inherit;
+  color: #fff;
+  background: var(--accent);
+  cursor: pointer;
+}
+
+button:hover { background: var(--accent-strong); }
+
+:is(button, summary):focus-visible {
+  outline: 3px solid var(--accent-strong);
+  outline-offset: 4px;
+}
+
 .emotions-page h1 {
   margin: .35rem 0 1.1rem;
   font-size: clamp(2.15rem, 5.5vw, 3.8rem);

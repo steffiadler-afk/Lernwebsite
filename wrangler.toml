@@ -1,7 +1,0 @@
-name = "learning-worker"
-main = "cloudflare/worker.js"
-compatibility_date = "2026-09-29"
-
-[[kv_namespaces]]
-binding = "LEARNING_KV"
-id = "ae7a1e694cf14d58832b93608adf01c7"
