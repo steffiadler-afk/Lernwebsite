@@ -1,7 +1,7 @@
 const course = '/english/klasse6/';
 const practiceHome = course + 'uebungen/';
 const modeParam = 'uebungen';
-const sections = ['test-1', 'test-1-login', 'grammar-trainer', 'vocabulary-unit1', 'describing-people', 'irregular-verbs'];
+const sections = ['test-1', 'test-1-login', 'grammar-trainer', 'vocabulary-unit1', 'describing-people', 'irregular-verbs', 'positive-emotions'];
 
 function isIndex(path, directory) {
   return path === directory || path === directory.slice(0, -1) ||

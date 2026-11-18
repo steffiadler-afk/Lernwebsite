@@ -1,0 +1,137 @@
+.emotions-page h1 {
+  margin: .35rem 0 1.1rem;
+  font-size: clamp(2.15rem, 5.5vw, 3.8rem);
+  line-height: 1.08;
+  letter-spacing: -.048em;
+}
+
+.emotions-board {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(15rem, .8fr);
+  align-items: center;
+  gap: clamp(1rem, 4vw, 3rem);
+  padding: clamp(.9rem, 3vw, 2rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: radial-gradient(ellipse at 28% 42%, var(--accent-2), transparent 64%), var(--card);
+  box-shadow: var(--shadow);
+}
+
+.emotion-wheel {
+  position: relative;
+  width: min(100%, 30rem);
+  margin-inline: auto;
+}
+
+.emotion-wheel canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 .45rem .55rem #15233732);
+}
+
+.wheel-pointer {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  width: 8%;
+  height: 6.5%;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 2px 2px #15233755);
+}
+
+.wheel-pointer::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #24334c;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.emotions-play {
+  text-align: center;
+}
+
+.spin-button {
+  width: min(100%, 16rem);
+  min-height: 3.25rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.spin-button[aria-disabled='true'] {
+  cursor: wait;
+  opacity: .78;
+  transform: none;
+}
+
+.emotion-result {
+  display: grid;
+  align-content: center;
+  gap: .35rem;
+  min-height: 7.75rem;
+  padding-block: .65rem;
+  color: var(--text);
+}
+
+.emotion-result strong {
+  font-size: clamp(2rem, 5.2vw, 3.35rem);
+  line-height: 1.04;
+  letter-spacing: -.045em;
+  overflow-wrap: anywhere;
+}
+
+.emotion-result span {
+  font-size: 1.05rem;
+  color: var(--practice-muted);
+}
+
+.emotion-sentence {
+  width: fit-content;
+  margin: 0 auto;
+  padding: .35rem .9rem;
+  border-radius: .7rem;
+  background: var(--accent-2);
+  font-weight: 650;
+}
+
+.emotion-vocabulary {
+  margin-block-start: 1.1rem;
+  padding: .85rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--card);
+}
+
+.emotion-vocabulary summary {
+  width: fit-content;
+  cursor: pointer;
+  font-weight: 750;
+}
+
+.emotion-vocabulary ol {
+  margin: .65rem 0 .25rem;
+  padding-inline-start: 1.7rem;
+  line-height: 1.8;
+  columns: 2 16rem;
+}
+
+.emotion-vocabulary li {
+  break-inside: avoid;
+  padding-inline-end: .65rem;
+}
+
+@media (max-width: 45rem) {
+  .emotions-board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .emotion-wheel {
+    width: min(100%, 24rem);
+  }
+
+  .emotion-result {
+    min-height: 5.4rem;
+  }
+}
