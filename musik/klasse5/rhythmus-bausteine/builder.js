@@ -24,6 +24,7 @@ function render(){
   sequence.replaceChildren(...chosen.map(block));
   document.querySelector('#empty').hidden=chosen.length>0;
   document.querySelector('#print').disabled=chosen.length===0;
+  document.querySelector('#displayToggle').disabled=chosen.length===0;
   more.disabled=chosen.length<4;add.disabled=chosen.length<4;
 }
 document.querySelector('#firstForm').addEventListener('submit',event=>{
@@ -37,6 +38,13 @@ document.querySelector('#moreForm').addEventListener('submit',event=>{
   if(!numbers){status.textContent='Bitte zwei unterschiedliche Nummern zwischen 1 und 10 eingeben.';more.focus();return}
   if(numbers.some(n=>chosen.slice(0,4).includes(n))){status.textContent='Diese Nummer ist bereits unter den ersten vier. Bitte zwei noch nicht verwendete Nummern wählen.';more.focus();return}
   chosen=[...chosen.slice(0,4),...numbers];render();status.textContent='Alle sechs Bausteine werden angezeigt.';
+});
+document.querySelector('#displayToggle').addEventListener('click',()=>{
+  const large=document.body.classList.toggle('large-display');
+  const button=document.querySelector('#displayToggle');
+  button.textContent=large?'Nummern bearbeiten':'Groß anzeigen';
+  button.setAttribute('aria-pressed',String(large));
+  document.querySelector('#sequenceTitle').scrollIntoView({block:'start'});
 });
 document.querySelector('#reset').addEventListener('click',()=>{chosen=[];first.value='';more.value='';status.textContent='';render();first.focus()});
 document.querySelector('#print').addEventListener('click',()=>window.print());
