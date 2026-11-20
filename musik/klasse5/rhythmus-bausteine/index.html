@@ -4,29 +4,33 @@
 <link rel="stylesheet" href="../../../src/shared/styles.css">
 <style>
 .wrap{max-width:1920px;width:100%}h1{font-size:clamp(1.7rem,4vw,3rem);margin:.4rem 0}header p{max-width:65ch;color:var(--muted)}
-.forms{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}.entry{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.2rem}.entry label{display:block;margin-bottom:.5rem}.entry input{margin-bottom:.7rem}.entry button{min-height:44px}.entry p{margin:.5rem 0 0}.strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.block{background:white;color:#172d44;border:1px solid #bdcad7;border-radius:12px;padding:.55rem;margin:0;min-width:0}.block figcaption{font-size:.88rem;font-weight:800;margin:0 0 .3rem;color:#315a80}.block img{display:block;width:100%;height:auto}.controls-row{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0}.catalog{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;margin:1rem 0}summary{font-weight:bold;cursor:pointer;padding:.7rem 0}#status{min-height:1.6rem;font-weight:700}[hidden]{display:none!important}button:disabled{opacity:.5;cursor:default}.note{font-size:.9rem;color:var(--muted)}#empty{padding:2rem;text-align:center;border:2px dashed var(--border);border-radius:16px}h2{margin:1rem 0 .6rem}
-@media(max-width:800px){.strip{grid-template-columns:minmax(0,1fr)}.forms{grid-template-columns:1fr}}
-@media(max-width:460px){.strip,.catalog{grid-template-columns:1fr}}
-@media print{.forms,.topbar,.controls-row,details,.back,header p,#status{display:none!important}.wrap{padding:0;max-width:none}body{background:white;color:black}.strip{grid-template-columns:repeat(2,minmax(0,1fr))}.block{break-inside:avoid}h1{font-size:22pt}}
-
-#sequence .block{padding:clamp(.5rem,1vw,1rem);border-width:2px}
-#sequence .block figcaption{font-size:clamp(1.1rem,2vw,1.7rem);margin-bottom:.35rem}
-.sequence-heading{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:1rem 0}
-.sequence-heading h2{margin:0}
+.forms{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}.entry{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.2rem}.entry label{display:block;margin-bottom:.5rem}.entry input{margin-bottom:.7rem}.entry button{min-height:44px}.entry p{margin:.5rem 0 0}
+.task{margin-block:1.5rem 2.5rem;padding-block-start:.5rem;border-top:3px solid var(--border)}
+.task h3{font-size:clamp(1.2rem,2.5vw,1.8rem);margin:.3rem 0 .8rem}
+.staves{display:grid;gap:1rem}
+.staff-row{display:grid;grid-template-columns:152fr 670fr 670fr;align-items:end;background:#fff;border:1px solid #b9c8d5;border-radius:12px;padding:clamp(.5rem,1vw,1rem);color:#172d44;overflow:hidden}
+.staff-row img{display:block;width:100%;height:auto}
+.measure{margin:0;min-width:0}
+.measure figcaption{font-size:clamp(.85rem,2vw,1.7rem);font-weight:800;color:#315a80;padding:0 .5rem .3rem}
+.block{background:#fff;color:#172d44;border:1px solid #bdcad7;border-radius:12px;padding:.55rem;margin:0;min-width:0}.block figcaption{font-size:.88rem;font-weight:800;margin:0 0 .3rem;color:#315a80}.block img{display:block;width:100%;height:auto}
+.controls-row{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0}.catalog{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;margin:1rem 0}summary{font-weight:bold;cursor:pointer;padding:.7rem 0}#status{min-height:1.6rem;font-weight:700}[hidden]{display:none!important}button:disabled{opacity:.5;cursor:default}.note{font-size:.9rem;color:var(--muted)}#empty{padding:2rem;text-align:center;border:2px dashed var(--border);border-radius:16px}
+.sequence-heading{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:1rem 0}.sequence-heading h2{margin:0}
 body.large-display .topbar,body.large-display .back,body.large-display header,body.large-display .forms,body.large-display #status,body.large-display .controls-row,body.large-display details{display:none!important}
-body.large-display .wrap{padding:12px}
-body.large-display .sequence-heading{margin:0 0 12px}
-@media print{#displayToggle{display:none!important}}
+body.large-display .wrap{padding:12px}body.large-display .sequence-heading{margin:0 0 12px}
+@media(max-width:800px){.forms{grid-template-columns:1fr}}
+@media(max-width:460px){.catalog{grid-template-columns:1fr}.staff-row{padding:.3rem}.measure figcaption{font-size:.75rem;padding-inline:.1rem}}
+@media print{.forms,.topbar,.controls-row,details,.back,header p,#status,#displayToggle{display:none!important}.wrap{padding:0;max-width:none}body{background:#fff;color:#000}.staff-row{break-inside:avoid}.task{margin-bottom:1.2rem}h1{font-size:22pt}}
 </style></head><body><main class="wrap">
 <div class="topbar"><div class="brand">Musik · Klasse 5</div><div id="themeControls" class="controls"></div></div>
 <p class="back"><a href="../">← Musik Klasse 5</a></p>
-<header><div class="muted">Rhythmus-Baukasten</div><h1>Rhythmische Bausteine</h1><p>Wähle vier Bausteine aus. Ergänze danach zwei weitere. Die Notenbilder entsprechen der Vorlage für die praktischen Noten.</p></header>
+<header><div class="muted">Rhythmus-Baukasten</div><h1>Rhythmische Bausteine</h1><p>Wähle vier Bausteine für Aufgabe 1 und danach zwei weitere für eine eigene Aufgabe 2. Die Notenbilder entsprechen der Vorlage für die praktischen Noten.</p></header>
 <div class="forms">
 <form id="firstForm" class="entry"><label for="first">1. Vier Bausteine auswählen</label><input type="text" id="first" placeholder="z. B. 1, 3, 6, 10" autocomplete="off" aria-describedby="hint"><button class="primary">Vier Bausteine anzeigen</button><p id="hint" class="note">Vier unterschiedliche Nummern von 1 bis 10, getrennt durch Kommas oder Leerzeichen.</p></form>
-<form id="moreForm" class="entry"><label for="more">2. Zwei Bausteine ergänzen</label><input type="text" id="more" placeholder="z. B. 2, 8" autocomplete="off" disabled><button id="add" class="primary" disabled>Zwei Bausteine anhängen</button><p class="note">Zwei noch nicht verwendete Nummern wählen. Jede Nummer darf insgesamt nur einmal vorkommen.</p></form>
+<form id="moreForm" class="entry"><label for="more">2. Zwei Bausteine für Aufgabe 2 auswählen</label><input type="text" id="more" placeholder="z. B. 2, 8" autocomplete="off" disabled><button id="add" class="primary" disabled>Aufgabe 2 anzeigen</button><p class="note">Zwei noch nicht verwendete Nummern wählen. Jede Nummer darf insgesamt nur einmal vorkommen.</p></form>
 </div>
 <p id="status" role="status" aria-live="polite"></p>
-<section aria-labelledby="sequenceTitle"><div class="sequence-heading"><h2 id="sequenceTitle">Dein Rhythmus</h2><button id="displayToggle" type="button" aria-pressed="false" disabled>Groß anzeigen</button></div><p id="empty">Hier erscheinen deine ausgewählten Bausteine.</p><div id="sequence" class="strip"></div></section>
+<section aria-labelledby="sequenceTitle"><div class="sequence-heading"><h2 id="sequenceTitle">Dein Rhythmus</h2><button id="displayToggle" type="button" aria-pressed="false" disabled>Groß anzeigen</button></div><p id="empty">Hier erscheinen deine ausgewählten Bausteine.</p><section id="firstTask" class="task" aria-labelledby="firstTaskTitle" hidden><h3 id="firstTaskTitle">Aufgabe 1 · Vier Bausteine</h3><div id="firstSequence" class="staves"></div></section>
+<section id="secondTask" class="task" aria-labelledby="secondTaskTitle" hidden><h3 id="secondTaskTitle">Aufgabe 2 · Zwei Bausteine</h3><div id="secondSequence" class="staves"></div></section></section>
 <div class="controls-row"><button id="reset" type="button">Neu beginnen</button><button id="print" type="button" disabled>Auswahl drucken</button></div>
 <details><summary>Alle 10 Bausteine ansehen</summary><div id="catalog" class="catalog"></div></details>
 </main><script type="module" src="./builder.js"></script></body></html>
